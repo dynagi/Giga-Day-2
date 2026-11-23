@@ -1,7 +1,7 @@
-// Background music loop ("Melody of Nature") with gain fades (Web Audio, so fades also work on iOS),
+// Violin music loop with gain fades (Web Audio, so fades also work on iOS),
 // plus a tiny synthesized chime.
 
-const SRC = '/audio/melody-of-nature.mp3';
+const SRC = '/audio/violin.mp3';
 const VOLUME = 0.5;
 
 let el: HTMLAudioElement | null = null;

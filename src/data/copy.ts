@@ -63,7 +63,7 @@ export const copy = {
 
   /** The personal poem scene, after the light is caught. */
   poem: {
-    intro: ['Aaj tumne video bheji, wo yaad hai?', 'Toh mujhe kuch kehna tha tumse...'],
+    intro: ['Kal tumne video bheji thi yaad hai?', 'Toh mujhe kuch kehna tha tumse...'],
     /** Five couplets, in order. */
     couplets: [
       ['Tum woh chaand ho, jis par koi daag nahi,', 'Tum itni khoobsurat ho, jiska koi hisaab nahi.'],

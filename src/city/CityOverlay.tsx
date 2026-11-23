@@ -51,7 +51,11 @@ export function CityOverlay() {
     resetChat();
     let raf = 0;
     let lastVersion = -1;
+    let prev = performance.now();
     const tick = () => {
+      const now = performance.now();
+      if (now - cityClock.tick > 500 && !cityClock.hold) cityClock.t += Math.min(0.1, (now - prev) / 1000);
+      prev = now;
       const sec = cityClock.t;
       setT(Math.floor(sec * 10) / 10);
       // the clouds of the descent, and of the rise at the end
@@ -73,12 +77,15 @@ export function CityOverlay() {
         setChatLines(phoneChat.msgs.length);
       }
       // the buzz in his pocket
-      if (sec >= CT.notify && !buzzed.current) {
+      if (sec >= CT.notify && !buzzed.current && !cityClock.skipChat) {
         buzzed.current = true;
         chatPing();
         navigator.vibrate?.([30, 60, 30]);
       }
-      if (sec >= CT.phoneAuto && !chatStarted.current) startChat();
+      if (sec >= CT.phoneAuto && !chatStarted.current) {
+        if (cityClock.skipChat) chatStarted.current = true;
+        else startChat();
+      }
       if (sec >= CT.end) {
         useStory.getState().goTo('earth');
         return;

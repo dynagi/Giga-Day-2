@@ -47,6 +47,10 @@ export const cityClock = {
   lookYaw: 0,
   lookPitch: 0,
   dragging: false,
+  /** when the 3D camera last ticked (if the 3D stops, the overlay keeps the story going) */
+  tick: 0,
+  /** for the `?scene=hostel` check link: start past the phone chat */
+  skipChat: false,
 };
 
 export function resetCityClock() {

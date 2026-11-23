@@ -1,3 +1,12 @@
+/* the cursor: a glowing "R" (mouse only; phones have no cursor) */
+html,
+body,
+*,
+*::before,
+*::after {
+  cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='%23fff3dc'/><stop offset='1' stop-color='%23cdb6ff'/></linearGradient></defs><text x='3' y='24' font-family='Georgia, serif' font-style='italic' font-weight='700' font-size='26' fill='url(%23g)' stroke='%232a1a48' stroke-width='1.6' paint-order='stroke'>R</text></svg>") 4 6, auto !important;
+}
+
 /* ---------- interactions layered on the existing scenes (nothing here changes their base look) ---------- */
 
 /* stardust that follows her finger or cursor, above the scenes, below the sound button */

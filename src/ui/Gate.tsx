@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import { copy } from '../data/copy';
 import { startMusic } from '../audio/music';
 import { useStory } from '../state/store';
+import { jumpToStart, startScene } from '../lib/jump';
 
 export function Gate() {
   const phase = useStory((s) => s.phase);
@@ -11,7 +12,8 @@ export function Gate() {
   const begin = () => {
     if (useStory.getState().phase !== 'gate') return;
     startMusic();
-    useStory.getState().goTo('garden');
+    if (startScene) jumpToStart();
+    else useStory.getState().goTo('garden');
   };
 
   useEffect(() => {

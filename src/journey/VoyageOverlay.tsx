@@ -18,7 +18,11 @@ export function VoyageOverlay() {
 
   useEffect(() => {
     let raf = 0;
+    let prev = performance.now();
     const tick = () => {
+      const now = performance.now();
+      if (now - journeyClock.tick > 500) journeyClock.t += Math.min(0.1, (now - prev) / 1000);
+      prev = now;
       const sec = journeyClock.t;
       setT(Math.floor(sec * 10) / 10);
       if (sec >= VT.end) {

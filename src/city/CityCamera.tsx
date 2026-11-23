@@ -57,6 +57,7 @@ export function CityCamera() {
   useFrame(({ clock }, delta) => {
     const dt = Math.min(delta, 0.1);
     if (!cityClock.hold) cityClock.t += dt;
+    cityClock.tick = performance.now();
     const t = cityClock.t;
     const seg = segmentAt(t);
     const tr = tracks[SEGMENTS.indexOf(seg)];

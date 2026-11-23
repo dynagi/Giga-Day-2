@@ -16,6 +16,8 @@ export const journeyClock = {
   vel: new THREE.Vector3(0, 0, -1),
   /** 0..1: how much the voyage set pieces are switched on (0 during the Earth part) */
   voyage: 0,
+  /** when the 3D camera last ticked (if the 3D stops, the overlays keep the story going) */
+  tick: 0,
 };
 
 export function resetJourneyClock() {

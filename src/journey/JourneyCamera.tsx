@@ -52,6 +52,7 @@ export function JourneyCamera({ keys }: { keys: Key[] }) {
     journeyClock.boost += (journeyClock.boostTarget - journeyClock.boost) * damp(2.5, dt);
     journeyClock.rate = 1 + 0.9 * journeyClock.boost;
     journeyClock.t += dt * journeyClock.rate;
+    journeyClock.tick = performance.now();
     const t = journeyClock.t;
 
     // time → position along the path (linear between keys, smooth through them)

@@ -2,8 +2,8 @@ import { useEffect, useRef } from 'react';
 import { env } from '../lib/env';
 
 /**
- * A soft trail of gold and lilac stardust that follows her finger or cursor,
- * and a tiny sparkle on every tap. Drawn on one small 2D canvas above the scene;
+ * A trail of little glowing "r"s (gold and lilac) that drift out of her finger or cursor,
+ * and a little burst of them on every tap. Drawn on one small 2D canvas above the scene;
  * the loop sleeps whenever no particles are alive.
  */
 
@@ -17,6 +17,8 @@ interface P {
   size: number;
   gold: boolean;
   star: boolean;
+  rot: number;
+  spin: number;
 }
 
 const MAX = env.lowPower ? 140 : 240;
@@ -54,9 +56,11 @@ export function Stardust() {
         vy: reduced ? 0 : Math.sin(a) * sp - (burst ? 10 : 8),
         life: reduced ? 0.5 : burst ? 0.7 + Math.random() * 0.4 : 0.7 + Math.random() * 0.5,
         age: 0,
-        size: burst ? 1.6 + Math.random() * 2 : 1 + Math.random() * 1.8,
+        size: burst ? 2.2 + Math.random() * 1.8 : 1.6 + Math.random() * 1.6,
         gold: Math.random() < 0.55,
         star: burst && Math.random() < 0.5,
+        rot: (Math.random() - 0.5) * 0.6,
+        spin: reduced ? 0 : (Math.random() - 0.5) * 2.4,
       });
       if (!raf) {
         last = performance.now();
@@ -121,6 +125,17 @@ export function Stardust() {
         c!.beginPath();
         c!.arc(p.x, p.y, r * 4, 0, Math.PI * 2);
         c!.fill();
+        // the little "r" itself, turning gently as it floats away
+        p.rot += p.spin * dt;
+        c!.save();
+        c!.translate(p.x, p.y);
+        c!.rotate(p.rot);
+        c!.font = `italic 600 ${Math.round(r * 7)}px 'Playfair Display', Georgia, serif`;
+        c!.textAlign = 'center';
+        c!.textBaseline = 'middle';
+        c!.fillStyle = p.gold ? `rgba(255,236,196,${0.95 * a})` : `rgba(236,224,255,${0.95 * a})`;
+        c!.fillText('r', 0, 0);
+        c!.restore();
         if (p.star) {
           // a tiny four-point twinkle
           const s = r * 3.2;

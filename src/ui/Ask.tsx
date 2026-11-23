@@ -30,6 +30,7 @@ const T = {
   // the poem
   lineAnim: 1300,
   fullHold: 5600,
+  tapAuto: 3000, // each line comes by itself; a tap brings it sooner
   tapMinGap: 650, // a quick double tap still reveals lines one by one
   nextHintAfter: 1800,
   poemOut: 1700,
@@ -165,11 +166,11 @@ export function Ask() {
         finishPoem();
         return;
       }
-      // the next line waits for her tap
+      auto = window.setTimeout(reveal, T.tapAuto);
       if (!tapped) hintT = window.setTimeout(() => setNextHint(true), T.nextHintAfter);
     };
     const tap = (x: number, y: number) => {
-      if (shown >= totalLines || (shown > 0 && performance.now() - lastAt < T.tapMinGap)) return;
+      if (shown >= totalLines || performance.now() - lastAt < T.tapMinGap) return;
       tapped = true;
       burst(x, y);
       reveal();
@@ -184,8 +185,7 @@ export function Ask() {
         tap(window.innerWidth / 2, window.innerHeight * 0.75);
       }
     };
-    // the first line also waits for her tap
-    const first = window.setTimeout(() => setNextHint(true), 600);
+    const first = window.setTimeout(reveal, 300);
     window.addEventListener('pointerdown', down);
     window.addEventListener('keydown', key);
     return () => {
