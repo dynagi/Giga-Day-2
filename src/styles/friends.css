@@ -1,0 +1,224 @@
+/* ---------- little space friends who say hi to Richa ---------- */
+
+.sf {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.sf-friend {
+  --size: clamp(64px, 12vmin, 118px);
+  position: absolute;
+  width: var(--size);
+  height: var(--size);
+  margin: calc(var(--size) / -2) 0 0 calc(var(--size) / -2);
+  opacity: 0;
+  transform: translate(var(--fx), var(--fy)) scale(0.6);
+}
+.sf-in .sf-friend,
+.sf-hi .sf-friend {
+  animation: sf-enter 1.6s cubic-bezier(0.22, 0.9, 0.3, 1.05) var(--enter-delay) forwards;
+}
+.sf-out .sf-friend {
+  opacity: 1;
+  transform: none;
+  animation: sf-leave 1.3s cubic-bezier(0.5, 0, 0.8, 0.4) var(--leave-delay) forwards;
+}
+@keyframes sf-enter {
+  from { opacity: 0; transform: translate(var(--fx), var(--fy)) scale(0.6) rotate(-12deg); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes sf-leave {
+  0% { opacity: 1; transform: none; }
+  25% { transform: translateY(-8px) rotate(6deg); }
+  100% { opacity: 0; transform: translate(var(--fx), var(--fy)) scale(0.6) rotate(10deg); }
+}
+
+.sf-body {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  pointer-events: auto;
+  -webkit-tap-highlight-color: transparent;
+  filter: drop-shadow(0 0 14px rgba(220, 203, 246, 0.35)) drop-shadow(0 6px 10px rgba(14, 10, 26, 0.5));
+}
+.sf-body:focus-visible {
+  outline: 1px solid rgba(243, 217, 164, 0.6);
+  outline-offset: 4px;
+  border-radius: 50%;
+}
+.sf-bounce {
+  display: block;
+  width: 100%;
+  height: 100%;
+  animation: sf-bob 3.2s var(--ease-in-out) calc(var(--i) * -0.7s) infinite;
+}
+.sf-svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+@keyframes sf-bob {
+  0%, 100% { transform: translateY(0) rotate(-2deg); }
+  50% { transform: translateY(-7px) rotate(2deg); }
+}
+
+/* waving, blinking, little details */
+.sf-wave {
+  transform-box: view-box;
+  animation: sf-wave 0.9s var(--ease-in-out) infinite alternate;
+}
+.sf-twinkle .sf-wave {
+  animation: sf-star-wiggle 1.4s var(--ease-in-out) infinite alternate;
+}
+@keyframes sf-wave {
+  from { transform: rotate(-18deg); }
+  to { transform: rotate(22deg); }
+}
+@keyframes sf-star-wiggle {
+  from { transform: rotate(-7deg); }
+  to { transform: rotate(7deg); }
+}
+.sf-eyes {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: sf-blink 4.2s calc(var(--i) * 0.9s) infinite;
+}
+@keyframes sf-blink {
+  0%, 92%, 100% { transform: scaleY(1); }
+  95% { transform: scaleY(0.1); }
+}
+.sf-glow {
+  animation: sf-glow 1.6s var(--ease-in-out) infinite alternate;
+}
+@keyframes sf-glow {
+  from { opacity: 0.55; }
+  to { opacity: 1; }
+}
+.sf-tentacles {
+  transform-box: view-box;
+  transform-origin: 50px 58px;
+  animation: sf-sway 2.2s var(--ease-in-out) infinite alternate;
+}
+@keyframes sf-sway {
+  from { transform: skewX(-6deg); }
+  to { transform: skewX(6deg); }
+}
+
+/* tap: a happy bounce and a few hearts */
+.sf-bounce.is-happy {
+  animation: sf-happy 0.9s cubic-bezier(0.3, 1.6, 0.5, 1) both;
+}
+@keyframes sf-happy {
+  0% { transform: scale(1); }
+  30% { transform: translateY(-18px) scale(1.12, 0.92) rotate(-8deg); }
+  60% { transform: translateY(0) scale(0.94, 1.08) rotate(8deg); }
+  100% { transform: none; }
+}
+.sf-hearts span {
+  position: absolute;
+  left: 50%;
+  top: 10%;
+  font-size: calc(var(--size) * 0.2);
+  opacity: 0;
+  animation: sf-heart 1.3s var(--ease) forwards;
+}
+.sf-hearts span:nth-child(2) { animation-delay: 0.12s; --hx: 26px; }
+.sf-hearts span:nth-child(3) { animation-delay: 0.22s; --hx: -24px; }
+@keyframes sf-heart {
+  0% { opacity: 0; transform: translate(-50%, 0) scale(0.5); }
+  25% { opacity: 1; }
+  100% { opacity: 0; transform: translate(calc(-50% + var(--hx, 0px)), -60px) scale(1); }
+}
+
+/* speech bubble */
+.sf-bubble {
+  position: absolute;
+  bottom: calc(100% + 4px);
+  margin: 0;
+  padding: 7px 13px;
+  border-radius: 16px;
+  background: #f6effd;
+  color: #2e1e48;
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: clamp(0.82rem, 2.4vmin, 1rem);
+  white-space: nowrap;
+  box-shadow: 0 4px 18px rgba(14, 10, 26, 0.45), 0 0 14px rgba(220, 203, 246, 0.35);
+  animation: sf-pop 0.55s cubic-bezier(0.3, 1.5, 0.5, 1) both;
+  pointer-events: none;
+}
+.sf-bubble::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  border: 7px solid transparent;
+  border-top-color: #f6effd;
+}
+.sf-side-left .sf-bubble {
+  left: 40%;
+  transform-origin: 10% 100%;
+}
+.sf-side-left .sf-bubble::after {
+  left: 14px;
+}
+.sf-side-right .sf-bubble {
+  right: 40%;
+  transform-origin: 90% 100%;
+}
+.sf-side-right .sf-bubble::after {
+  right: 14px;
+}
+@keyframes sf-pop {
+  from { opacity: 0; transform: scale(0.4); }
+  to { opacity: 1; transform: none; }
+}
+/* the top friends speak below themselves so bubbles stay on screen */
+.sf-twinkle .sf-bubble,
+.sf-jelly .sf-bubble {
+  bottom: auto;
+  top: calc(100% + 6px);
+}
+.sf-twinkle .sf-bubble::after,
+.sf-jelly .sf-bubble::after {
+  top: auto;
+  bottom: 100%;
+  border-top-color: transparent;
+  border-bottom-color: #f6effd;
+}
+.sf-twinkle .sf-bubble {
+  transform-origin: 10% 0;
+}
+.sf-jelly .sf-bubble {
+  transform-origin: 90% 0;
+}
+
+/* reduced motion: friends simply fade in and out, no bobbing or waving */
+.sf.is-calm .sf-friend {
+  transform: none;
+}
+.sf.is-calm.sf-in .sf-friend,
+.sf.is-calm.sf-hi .sf-friend {
+  animation: sf-fade-in 1s ease var(--enter-delay) forwards;
+}
+.sf.is-calm.sf-out .sf-friend {
+  animation: sf-fade-out 1s ease forwards;
+}
+.sf.is-calm .sf-bounce,
+.sf.is-calm .sf-wave,
+.sf.is-calm .sf-tentacles {
+  animation: none;
+}
+@keyframes sf-fade-in {
+  to { opacity: 1; }
+}
+@keyframes sf-fade-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}

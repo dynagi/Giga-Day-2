@@ -1,0 +1,326 @@
+/* ---------- the garden sequence (first after the tap) ---------- */
+
+.gs {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  transition: opacity 2.2s var(--ease);
+}
+.gs.gs-step-leave {
+  opacity: 0;
+}
+
+/* before the garden: cosmic lavender, a few drifting motes */
+.gs-backdrop {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 62% 46% at 50% 50%, rgba(58, 42, 99, 0.55), transparent 75%),
+    radial-gradient(ellipse 40% 30% at 28% 32%, rgba(180, 157, 220, 0.08), transparent 70%);
+  opacity: 0;
+  animation: gs-in 1.6s var(--ease) forwards;
+}
+.gs-motes {
+  position: absolute;
+  inset: 0;
+  transition: opacity 2s var(--ease);
+}
+.gs:not(.gs-step-remember):not(.gs-step-rememberOut) .gs-motes {
+  opacity: 0;
+}
+.gs-mote {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: #efe4ff;
+  box-shadow: 0 0 6px 1px rgba(220, 203, 246, 0.6);
+  opacity: 0;
+  animation:
+    gs-in 2s var(--ease) calc(0.4s + var(--i) * 0.15s) forwards,
+    gs-float calc(7s + var(--i) * 0.6s) var(--ease-in-out) infinite alternate;
+}
+.gs-mote:nth-child(3n) {
+  background: #fff3d8;
+  box-shadow: 0 0 6px 1px rgba(243, 217, 164, 0.55);
+}
+@keyframes gs-in {
+  to { opacity: 1; }
+}
+@keyframes gs-float {
+  from { transform: translate(0, 0); }
+  to { transform: translate(12px, -26px); }
+}
+
+/* text before the garden appears */
+.gs-center {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: calc(24px + var(--safe-t)) calc(24px + var(--safe-r)) calc(24px + var(--safe-b)) calc(24px + var(--safe-l));
+  text-align: center;
+}
+.gs-remember {
+  margin: 0;
+  max-width: 24em;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: clamp(1.25rem, 3vw, 2.05rem);
+  line-height: 1.45;
+  color: var(--text);
+  text-wrap: balance;
+}
+.gs-word {
+  display: inline-block;
+  opacity: 0;
+  animation: gs-word 1.3s var(--ease) var(--d, 0ms) forwards;
+}
+@keyframes gs-word {
+  0% { opacity: 0; transform: translateY(0.25em); filter: blur(5px); text-shadow: 0 0 18px rgba(220, 203, 246, 0.9); }
+  100% { opacity: 1; transform: none; filter: blur(0); text-shadow: 0 0 16px rgba(180, 157, 220, 0.35); }
+}
+.gs-remember.is-out {
+  animation: gs-out 1.3s var(--ease) forwards;
+}
+@keyframes gs-out {
+  from { opacity: 1; transform: none; filter: blur(0); }
+  to { opacity: 0; transform: translateY(-8px) scale(0.99); filter: blur(4px); }
+}
+
+/* ---- the garden (Day 1's look; sky, glow and mist as before) ---- */
+.garden {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: #1b1329;
+  contain: strict;
+  animation: garden-in 1.8s ease both;
+}
+.garden__sky,
+.garden__glow,
+.garden__warm,
+.garden__mist,
+.garden__canvas {
+  position: absolute;
+  pointer-events: none;
+}
+.garden__sky {
+  inset: 0;
+  background:
+    radial-gradient(120% 70% at 50% 108%, rgba(118, 86, 164, 0.85) 0%, rgba(107, 79, 150, 0) 60%),
+    radial-gradient(60% 40% at 16% 18%, rgba(150, 110, 200, 0.14), transparent 70%),
+    radial-gradient(50% 36% at 84% 28%, rgba(226, 150, 204, 0.09), transparent 70%),
+    linear-gradient(180deg, #19112a 0%, #241939 28%, #33255a 56%, #45336d 75%, #382a54 100%);
+}
+.garden__sky::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(70% 45% at 70% 40%, rgba(196, 160, 240, 0.1), transparent 70%),
+    radial-gradient(60% 40% at 25% 55%, rgba(236, 170, 214, 0.07), transparent 70%);
+  opacity: 0;
+  animation: garden-light 16s ease-in-out 2s infinite alternate;
+}
+.garden__glow {
+  left: -12%;
+  right: -12%;
+  bottom: 4%;
+  height: 50%;
+  background: radial-gradient(50% 50% at 50% 72%, rgba(214, 182, 255, 0.42), rgba(240, 170, 214, 0.15) 46%, transparent 72%);
+  opacity: 0;
+  animation:
+    garden-glow-in 2.6s ease 0.5s forwards,
+    garden-breathe 9s ease-in-out 3.1s infinite alternate;
+}
+/* Day 2: warmer, more magical light as the garden blooms further */
+.garden__warm {
+  left: -15%;
+  right: -15%;
+  bottom: 0;
+  height: 70%;
+  background:
+    radial-gradient(48% 46% at 50% 78%, rgba(243, 217, 164, 0.2), transparent 70%),
+    radial-gradient(70% 60% at 50% 70%, rgba(242, 189, 214, 0.12), transparent 72%);
+  opacity: 0;
+  transition: opacity 7s ease;
+}
+.garden.is-blooming .garden__warm {
+  opacity: 1;
+}
+.garden__canvas {
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  /* a gentle camera pull-back as the garden expands */
+  transform: scale(1.07);
+  transform-origin: 50% 100%;
+  transition: transform 12s cubic-bezier(0.33, 0, 0.2, 1);
+}
+.garden.is-blooming .garden__canvas {
+  transform: scale(1);
+}
+.garden__mist {
+  left: -10%;
+  width: 120%;
+  bottom: 12%;
+  height: 24%;
+  background: linear-gradient(180deg, transparent, rgba(200, 176, 238, 0.13) 50%, transparent);
+  opacity: 0;
+  animation:
+    garden-glow-in 3s ease 2.4s forwards,
+    garden-drift 22s ease-in-out 2.4s infinite alternate;
+}
+@keyframes garden-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes garden-glow-in {
+  to { opacity: 1; }
+}
+@keyframes garden-breathe {
+  from { transform: scale(1); }
+  to { transform: scale(1.06, 1.1); }
+}
+@keyframes garden-light {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes garden-drift {
+  from { transform: translateX(-3%); }
+  to { transform: translateX(3%); }
+}
+
+/* ---- the flowers' poem, over the garden: no panel, only light and shadow ---- */
+.gs-poem {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(5.5vh + var(--safe-t));
+  padding: 0 calc(22px + var(--safe-r)) 0 calc(22px + var(--safe-l));
+  text-align: center;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: min(clamp(1.02rem, 1.5vw + 0.5rem, 1.72rem), 3.3vh);
+  line-height: 1.5;
+  color: #fbf4ff;
+  transition:
+    opacity 1.7s var(--ease),
+    transform 1.7s var(--ease),
+    filter 1.7s var(--ease);
+}
+.gs-poem.is-out {
+  opacity: 0;
+  transform: translateY(-8px);
+  filter: blur(3px);
+}
+.gs-stanza + .gs-stanza {
+  margin-top: 0.95em;
+}
+.gs-line {
+  margin: 0 auto;
+  max-width: 30em;
+  text-wrap: balance;
+  /* readability over flowers: dark soft shadow + pale glow, no box */
+  text-shadow:
+    0 0 2px rgba(18, 10, 32, 0.85),
+    0 2px 14px rgba(18, 10, 32, 0.75),
+    0 0 26px rgba(220, 203, 246, 0.3);
+  opacity: 0;
+  animation: gs-line 1.5s var(--ease) forwards;
+}
+@keyframes gs-line {
+  from { opacity: 0; transform: translateY(0.5em); filter: blur(4px); }
+  to { opacity: 1; transform: none; filter: blur(0); }
+}
+
+/* ---- "Garden want to say something to you": alone in the sky, before the poem ---- */
+.gs-says-wrap {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 24%;
+  padding: 0 24px;
+  text-align: center;
+}
+.gs-says {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: clamp(1.35rem, 3.2vw, 2.2rem);
+  line-height: 1.3;
+  color: #fbf4ff;
+  text-wrap: balance;
+  text-shadow:
+    0 0 2px rgba(18, 10, 32, 0.85),
+    0 2px 14px rgba(18, 10, 32, 0.75),
+    0 0 26px rgba(220, 203, 246, 0.35);
+  animation: gs-line 1.6s var(--ease) both;
+}
+.gs-says.is-out {
+  animation: gs-out 1.2s var(--ease) forwards;
+}
+
+/* ---- "See what you do with us" ---- */
+.gs-see-wrap {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 19%;
+  padding: 0 24px;
+  text-align: center;
+}
+.gs-see {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: clamp(1.7rem, 4.4vw, 3rem);
+  line-height: 1.25;
+  color: #fff8ee;
+  text-wrap: balance;
+  text-shadow:
+    0 0 2px rgba(18, 10, 32, 0.8),
+    0 2px 16px rgba(18, 10, 32, 0.7),
+    0 0 30px rgba(243, 217, 164, 0.4);
+  animation: gs-see 2.2s var(--ease) both;
+}
+@keyframes gs-see {
+  0% { opacity: 0; transform: scale(1.08); filter: blur(6px); letter-spacing: 0.04em; }
+  60% { opacity: 1; filter: blur(0); }
+  100% { opacity: 1; transform: scale(1); filter: blur(0); letter-spacing: 0; }
+}
+.gs-see.is-out {
+  animation: gs-out 1.5s var(--ease) forwards;
+}
+
+/* ---- reduced motion: no zooms, blurs or drifting ---- */
+.gs.is-still .gs-word,
+.gs.is-still .gs-says,
+.gs.is-still .gs-line,
+.gs.is-still .gs-see {
+  animation-name: gs-in;
+}
+.gs.is-still .gs-mote,
+.gs.is-still .garden__sky::after {
+  animation: gs-in 1s ease forwards;
+}
+.gs.is-still .garden__glow,
+.gs.is-still .garden__mist {
+  animation: none;
+  opacity: 1;
+}
+.gs.is-still .garden__canvas {
+  transform: none;
+  transition: none;
+}
+.gs.is-still .gs-remember.is-out,
+.gs.is-still .gs-says.is-out,
+.gs.is-still .gs-see.is-out {
+  animation: gs-fade-out 1.2s ease forwards;
+}
+@keyframes gs-fade-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}

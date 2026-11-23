@@ -1,0 +1,251 @@
+/* ---------- interactions layered on the existing scenes (nothing here changes their base look) ---------- */
+
+/* stardust that follows her finger or cursor, above the scenes, below the sound button */
+.stardust {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 4;
+  pointer-events: none;
+}
+
+/* shared small hint, same style as "psst… follow the light ✨" */
+.hint-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: calc(9vh + var(--safe-b));
+  z-index: 3;
+  margin: 0;
+  padding: 0 24px;
+  text-align: center;
+  font-family: var(--font-hand);
+  font-weight: 500;
+  font-size: 1.3rem;
+  color: var(--lilac);
+  text-shadow: 0 0 12px rgba(180, 157, 220, 0.35), 0 1px 8px rgba(18, 10, 32, 0.7);
+  opacity: 0;
+  transform: translateY(4px);
+  transition:
+    opacity 1.2s var(--ease),
+    transform 1.2s var(--ease);
+  pointer-events: none;
+}
+.hint-line.is-shown {
+  opacity: 0.85;
+  transform: none;
+}
+
+/* ---- joke: a misty glass over the punchline that she rubs clear ---- */
+.pi-fog-wrap {
+  position: relative;
+  display: inline-block;
+}
+.pi-fog:not(.pi-l3) .pi-punch {
+  opacity: 0.3;
+  filter: blur(3px);
+}
+.pi-fog-glass {
+  position: absolute;
+  inset: -26px -44px;
+  pointer-events: auto;
+  cursor: grab;
+  /* feathered edges: mist, not a box */
+  -webkit-mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, #000 52%, transparent 100%);
+  mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, #000 52%, transparent 100%);
+  animation: pi-fog-in 0.9s var(--ease) both;
+  transition:
+    opacity 0.55s var(--ease),
+    filter 0.55s var(--ease);
+}
+.pi-fog-glass.is-melting {
+  opacity: 0;
+  filter: blur(8px);
+  pointer-events: none;
+}
+.fog-glass {
+  display: block;
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+}
+@keyframes pi-fog-in {
+  from { opacity: 0; transform: scale(0.96); }
+  to { opacity: 1; transform: none; }
+}
+.pi-rub-hint {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 100%;
+  margin: 1.4rem 0 0;
+  font-family: var(--font-hand);
+  font-weight: 500;
+  font-size: 1.2rem;
+  color: var(--lilac);
+  opacity: 0;
+  transition: opacity 1s var(--ease);
+}
+.pi-rub-hint.is-shown {
+  opacity: 0.85;
+}
+.pi-text {
+  position: relative;
+}
+
+/* ---- thoughts: stars gather into the line ---- */
+.thought-stars {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+.thought.is-gathering:not(.is-shown):not(.is-out):not(.is-out-fast) {
+  transition: none;
+}
+
+/* ---- heart: she holds it, it fills with light and beats faster ---- */
+.heart-stage {
+  --fill: 0;
+  transform: translate(-50%, -50%) scale(calc(1 + var(--fill) * 0.09));
+}
+.heart-stage .heart {
+  filter: brightness(calc(1 + var(--fill) * 0.5)) drop-shadow(0 0 6px rgba(236, 225, 255, 0.6))
+    drop-shadow(0 0 calc(22px + var(--fill) * 18px) rgba(180, 157, 220, 0.5))
+    drop-shadow(0 0 48px rgba(180, 157, 220, 0.28));
+}
+.heart-stage .heart-bloom {
+  filter: brightness(calc(1 + var(--fill) * 0.9));
+}
+.heart-stage.is-holding .heart {
+  animation:
+    heart-in var(--heart-in) var(--ease) forwards,
+    heart-beat 0.8s var(--ease-in-out) infinite;
+}
+.heart-stage.is-calm.is-holding .heart {
+  animation: heart-in var(--heart-in) var(--ease) forwards;
+}
+.heart-stage.is-holding .heart-mote {
+  box-shadow: 0 0 10px 2px rgba(220, 203, 246, 0.85);
+}
+
+/* ---- second poem: each line blooms on her tap ---- */
+.ak-line:not(.is-on) {
+  animation: none;
+  opacity: 0;
+}
+.ak-petals {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+.ak-petal {
+  position: absolute;
+  width: 11px;
+  height: 7px;
+  border-radius: 60% 40% 60% 40%;
+  box-shadow: 0 0 6px rgba(242, 189, 214, 0.5);
+  animation: ak-petal 1.6s cubic-bezier(0.2, 0.7, 0.3, 1) forwards;
+}
+@keyframes ak-petal {
+  from { opacity: 1; transform: translate(-50%, -50%) scale(0.6) rotate(0deg); }
+  to { opacity: 0; transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(1) rotate(var(--r)); }
+}
+
+/* ---- garden: petals to catch while the flowers speak ---- */
+.cp {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.cp-petal {
+  position: absolute;
+  top: -48px;
+  width: 48px;
+  height: 48px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  pointer-events: auto;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  animation: cp-fall var(--dur) linear forwards;
+  transition: opacity 1s var(--ease);
+}
+.cp.is-done .cp-petal {
+  opacity: 0;
+  pointer-events: none;
+}
+.cp-petal-shape {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: var(--size);
+  height: calc(var(--size) * 0.62);
+  margin: calc(var(--size) * -0.31) 0 0 calc(var(--size) * -0.5);
+  border-radius: 60% 40% 60% 40%;
+  background: radial-gradient(circle at 35% 35%, #fff 0%, var(--hue) 55%);
+  box-shadow: 0 0 10px rgba(242, 189, 214, 0.55);
+  animation: cp-flutter 1.6s var(--ease-in-out) infinite alternate;
+}
+@keyframes cp-fall {
+  from { transform: translate(-50%, 0) rotate(var(--rot)); }
+  to { transform: translate(calc(-50% + var(--drift)), calc(100vh + 60px)) rotate(calc(var(--rot) + 260deg)); }
+}
+@keyframes cp-flutter {
+  from { transform: scaleX(1) rotate(-10deg); }
+  to { transform: scaleX(0.55) rotate(14deg); }
+}
+.cp-pop {
+  position: fixed;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+.cp-spark {
+  position: absolute;
+  left: -2.5px;
+  top: -2.5px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #fff6e4;
+  box-shadow: 0 0 8px 2px var(--hue);
+  animation: cp-spark 0.9s var(--ease) forwards;
+}
+@keyframes cp-spark {
+  from { opacity: 1; transform: rotate(var(--a)) translateX(0) scale(1); }
+  to { opacity: 0; transform: rotate(var(--a)) translateX(38px) scale(0.3); }
+}
+.cp-fly {
+  position: absolute;
+  left: -17px;
+  top: -17px;
+  animation: cp-fly 3s cubic-bezier(0.4, 0, 0.7, 1) forwards;
+}
+.cp-wings {
+  transform-origin: 0 0;
+  animation: cp-flap 0.16s ease-in-out infinite alternate;
+}
+@keyframes cp-fly {
+  0% { opacity: 0; transform: translate(0, 0) scale(0.6) rotate(0deg); }
+  12% { opacity: 1; transform: translate(6px, -14px) scale(1) rotate(8deg); }
+  50% { transform: translate(60px, -110px) rotate(-8deg); }
+  85% { opacity: 1; }
+  100% { opacity: 0; transform: translate(130px, -260px) rotate(10deg); }
+}
+@keyframes cp-flap {
+  from { transform: scaleX(1); }
+  to { transform: scaleX(0.3); }
+}
+@media (max-width: 520px) {
+  .pi-fog-glass {
+    inset: -22px -8px;
+  }
+}

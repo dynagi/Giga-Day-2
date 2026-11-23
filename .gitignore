@@ -1,0 +1,7 @@
+node_modules/
+dist/
+.vercel/
+.env*
+
+# a copy of the music already in public/audio
+/good_b_music-melody-of-nature-main-6672.mp3

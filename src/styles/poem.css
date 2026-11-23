@@ -1,0 +1,315 @@
+/* ---------- personal poem scene (between the light and the flight) ---------- */
+
+.poem-scene {
+  position: absolute;
+  inset: 0;
+}
+
+/* soft lavender light that builds behind the words */
+.poem-glow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 46% 40% at 50% 50%, rgba(220, 203, 246, 0.1), transparent 70%),
+    radial-gradient(ellipse 75% 62% at 50% 50%, rgba(180, 157, 220, 0.13), transparent 72%);
+  opacity: 0;
+  transition: opacity 2.4s var(--ease);
+}
+.step-intro .poem-glow { opacity: 0.35; transition-duration: 3s; }
+.step-poem .poem-glow { opacity: 1; transition: opacity var(--poem-total) linear; }
+.step-hold .poem-glow { opacity: 1; }
+.step-poemOut .poem-glow { opacity: 0.55; transition-duration: 1.6s; }
+.step-heart .poem-glow { opacity: 0.4; }
+.step-dissolve .poem-glow { opacity: 0; transition-duration: 1.2s; }
+
+/* the sky darkens slightly for the heart */
+.poem-veil {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse at 50% 50%, rgba(14, 10, 26, 0.35), rgba(8, 5, 16, 0.75));
+  opacity: 0;
+  transition: opacity 2s var(--ease);
+}
+.step-poemOut .poem-veil { opacity: 0.45; }
+.step-heart .poem-veil { opacity: 0.7; }
+.step-dissolve .poem-veil { opacity: 0; transition-duration: 1.4s; }
+
+.poem-intro-wrap {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 0 24px;
+}
+
+/* ---- the poem ---- */
+.poem {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: calc(18px + var(--safe-t)) calc(20px + var(--safe-r)) calc(18px + var(--safe-b)) calc(20px + var(--safe-l));
+  text-align: center;
+  transition:
+    opacity 1.6s var(--ease),
+    filter 1.6s var(--ease),
+    transform 1.6s var(--ease);
+}
+.poem.is-out {
+  opacity: 0;
+  filter: blur(3px);
+  transform: translateY(-6px);
+}
+.couplet {
+  max-width: 34em;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: min(clamp(1rem, 2.1vw + 0.45rem, 1.65rem), 3.4vh);
+  line-height: 1.42;
+  color: var(--text);
+}
+.couplet + .couplet {
+  margin-top: 0.7em;
+}
+.pline {
+  margin: 0;
+  text-wrap: balance;
+  text-shadow: 0 0 16px rgba(180, 157, 220, 0.28);
+  /* once a line is complete it softly steps back, so the newest line leads the eye */
+  animation: line-rest 1.6s var(--ease) forwards;
+  animation-delay: calc(var(--line-end) + 700ms);
+}
+.couplet:last-child .pline:last-child {
+  animation: none;
+}
+/* when it's all written, every line comes back to full light */
+.step-hold .pline,
+.step-poemOut .pline {
+  animation: line-wake 1.6s var(--ease) forwards;
+}
+.step-hold .couplet:last-child .pline:last-child,
+.step-poemOut .couplet:last-child .pline:last-child {
+  animation: none;
+}
+@keyframes line-rest {
+  from { opacity: 1; }
+  to { opacity: 0.72; }
+}
+@keyframes line-wake {
+  from { opacity: 0.72; }
+  to { opacity: 1; }
+}
+
+.pword {
+  position: relative;
+  display: inline-block;
+  white-space: nowrap;
+}
+
+/* each letter is written into the sky: a small warm glow, then it settles */
+.pl {
+  display: inline-block;
+  opacity: 0;
+  animation: letter-in var(--letter-ms, 900ms) var(--ease) forwards;
+}
+@keyframes letter-in {
+  0% {
+    opacity: 0;
+    transform: translateY(0.2em) scale(1.22);
+    filter: blur(3px);
+    color: #fffaf0;
+    text-shadow: 0 0 10px rgba(243, 217, 164, 0.95), 0 0 3px rgba(255, 250, 240, 0.9);
+  }
+  35% {
+    opacity: 1;
+    filter: blur(0);
+    color: #fffaf6;
+    text-shadow: 0 0 12px rgba(243, 217, 164, 0.6), 0 0 18px rgba(220, 203, 246, 0.55);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+    filter: blur(0);
+    color: var(--text);
+    text-shadow: 0 0 16px rgba(180, 157, 220, 0.28);
+  }
+}
+
+/* one tiny sparkle as each line completes */
+.pspark {
+  position: absolute;
+  right: -0.62em;
+  top: 0.12em;
+  width: 0.42em;
+  height: 0.42em;
+  background: #fff3d8;
+  clip-path: polygon(50% 0, 60% 40%, 100% 50%, 60% 60%, 50% 100%, 40% 60%, 0 50%, 40% 40%);
+  opacity: 0;
+  transform: scale(0);
+  animation: spark 1.1s var(--ease) forwards;
+  pointer-events: none;
+}
+@keyframes spark {
+  0% { opacity: 0; transform: scale(0) rotate(0deg); }
+  35% { opacity: 0.9; transform: scale(1) rotate(20deg); }
+  100% { opacity: 0; transform: scale(0.2) rotate(45deg); }
+}
+
+/* ---- the closing heart ---- */
+.heart-stage {
+  --hs: min(36vmin, 220px);
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: var(--hs);
+  height: var(--hs);
+  transform: translate(-50%, -50%);
+}
+.heart-bloom {
+  position: absolute;
+  inset: -65%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(220, 203, 246, 0.26) 0%, rgba(180, 157, 220, 0.12) 32%, transparent 64%);
+  opacity: 0;
+  animation: bloom-in var(--heart-in) var(--ease) forwards;
+}
+.heart {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  filter: drop-shadow(0 0 6px rgba(236, 225, 255, 0.6)) drop-shadow(0 0 22px rgba(180, 157, 220, 0.5)) drop-shadow(0 0 48px rgba(180, 157, 220, 0.28));
+  opacity: 0;
+  animation:
+    heart-in var(--heart-in) var(--ease) forwards,
+    heart-beat 1.35s var(--ease-in-out) calc(var(--heart-in) + 200ms) 2;
+}
+.heart-line {
+  fill: none;
+  stroke: #f1e8ff;
+  stroke-width: 0.7;
+  stroke-linejoin: round;
+  opacity: 0.75;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: heart-draw 1.7s var(--ease-in-out) forwards;
+}
+.heart-fill,
+.heart-shine {
+  opacity: 0;
+  animation: heart-fill 1.6s var(--ease) 0.55s forwards;
+}
+@keyframes bloom-in {
+  from { opacity: 0; transform: scale(0.6); }
+  to { opacity: 1; transform: scale(1); }
+}
+@keyframes heart-in {
+  from { opacity: 0; transform: scale(0.86); }
+  to { opacity: 1; transform: scale(1); }
+}
+@keyframes heart-draw {
+  to { stroke-dashoffset: 0; }
+}
+@keyframes heart-fill {
+  to { opacity: 1; }
+}
+@keyframes heart-beat {
+  0% { transform: scale(1); }
+  14% { transform: scale(1.06); }
+  28% { transform: scale(1); }
+  42% { transform: scale(1.03); }
+  65%, 100% { transform: scale(1); }
+}
+
+.heart-mote {
+  position: absolute;
+  border-radius: 50%;
+  background: #efe4ff;
+  box-shadow: 0 0 6px 1px rgba(220, 203, 246, 0.7);
+  opacity: 0;
+  translate: -50% -50%;
+  animation:
+    mote-in 1.4s var(--ease) forwards,
+    mote-float 4.2s var(--ease-in-out) infinite alternate;
+}
+.heart-mote.gold {
+  background: #fff3d8;
+  box-shadow: 0 0 6px 1px rgba(243, 217, 164, 0.6);
+}
+@keyframes mote-in {
+  to { opacity: 0.7; }
+}
+@keyframes mote-float {
+  from { transform: translate(-3px, 2px); }
+  to { transform: translate(3px, -4px); }
+}
+
+/* dissolve: the heart gathers itself into one point of light */
+.step-dissolve .heart {
+  animation: heart-out var(--dissolve) cubic-bezier(0.55, 0, 0.6, 1) forwards;
+}
+.step-dissolve .heart-bloom {
+  animation: bloom-out var(--dissolve) var(--ease-in-out) forwards;
+}
+.step-dissolve .heart-mote {
+  animation: mote-out 0.9s var(--ease) forwards;
+}
+@keyframes heart-out {
+  0% { opacity: 1; transform: scale(1); }
+  60% { opacity: 0.5; }
+  100% { opacity: 0; transform: scale(0.12); }
+}
+@keyframes bloom-out {
+  0% { opacity: 1; transform: scale(1); }
+  55% { opacity: 0.9; transform: scale(0.45); }
+  100% { opacity: 0; transform: scale(0.15); }
+}
+@keyframes mote-out {
+  from { opacity: 0.7; }
+  to { opacity: 0; }
+}
+.heart-dust {
+  position: absolute;
+  border-radius: 50%;
+  background: #efe4ff;
+  box-shadow: 0 0 5px 1px rgba(220, 203, 246, 0.75);
+  opacity: 0;
+  transform: translate(-50%, -50%);
+  animation: dust-gather var(--dissolve) cubic-bezier(0.5, 0, 0.3, 1) forwards;
+}
+.heart-dust.gold {
+  background: #fff3d8;
+  box-shadow: 0 0 5px 1px rgba(243, 217, 164, 0.7);
+}
+@keyframes dust-gather {
+  0% { opacity: 0; transform: translate(-50%, -50%) scale(1); }
+  18% { opacity: 0.95; }
+  100% {
+    opacity: 0;
+    transform: translate(calc(-50% + var(--dx) * var(--hs)), calc(-50% + var(--dy) * var(--hs))) scale(0.25);
+  }
+}
+
+/* ---- reduced motion: letters simply fade, the heart doesn't beat ---- */
+.reduced .pl {
+  animation-name: letter-fade;
+}
+.reduced .heart {
+  animation: heart-in var(--heart-in) var(--ease) forwards;
+}
+.reduced .step-dissolve .heart {
+  animation: heart-out var(--dissolve) var(--ease) forwards;
+}
+.reduced .heart-mote {
+  animation: mote-in 1.4s var(--ease) forwards;
+}
+@keyframes letter-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}

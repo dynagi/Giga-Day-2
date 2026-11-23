@@ -1,0 +1,26 @@
+:root {
+  --space-0: #0e0a1a;
+  --space-1: #1a1230;
+  --violet: #3a2a63;
+  --lavender: #b49ddc;
+  --lilac: #dccbf6;
+  --pink: #f2bdd6;
+  --gold: #f3d9a4;
+  --gold-deep: #c9a45c;
+  --text: #f6effd;
+
+  --font-serif: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  --font-body: 'Space Grotesk', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-label: 'Michroma', 'Space Grotesk', system-ui, sans-serif;
+  --font-hand: 'Dancing Script', 'Segoe Script', cursive;
+
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.45, 0.05, 0.35, 1);
+
+  --safe-t: env(safe-area-inset-top, 0px);
+  --safe-r: env(safe-area-inset-right, 0px);
+  --safe-b: env(safe-area-inset-bottom, 0px);
+  --safe-l: env(safe-area-inset-left, 0px);
+
+  color-scheme: dark;
+}
